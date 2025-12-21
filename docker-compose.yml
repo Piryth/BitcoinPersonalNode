@@ -1,0 +1,85 @@
+version: '3.7'
+
+services:
+  # 1. Tor
+  tor:
+    image: osminogin/tor-simple:latest
+    container_name: tor_proxy
+    # Note: We write to /etc/tor/torrc for this image
+    command: >
+      sh -c "
+        echo 'SocksPort 0.0.0.0:9050' > /etc/tor/torrc;
+        echo 'HiddenServiceDir /var/lib/tor/hidden_service/' >> /etc/tor/torrc;
+        echo 'HiddenServicePort 8333 knots:8333' >> /etc/tor/torrc;
+        echo 'HiddenServiceDir /var/lib/tor/lnd_hidden_service/' >> /etc/tor/torrc;
+        echo 'HiddenServicePort 9735 lnd:9735' >> /etc/tor/torrc;
+        exec tor -f /etc/tor/torrc
+      "
+    volumes:
+      - ./tor-data:/var/lib/tor/hidden_service
+      - ./lnd-tor-data:/var/lib/tor/lnd_hidden_service 
+    restart: unless-stopped
+    networks:
+      - bitcoin-network
+
+  # 2. Bitcoin Knots
+  knots:
+    image: bitcoinknots/bitcoin:29.2
+    container_name: bitcoin_knots
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+    
+    ports:
+      - "127.0.0.1:8332:8332"
+    
+    volumes:
+      - ./knots-data:/config/.bitcoin
+    
+    # Needs to be available for LND and Tor
+    expose:
+      - "28332" # ZMQ Port for new blocks
+      - "28333" # ZMQ Port for raw transactions
+
+    depends_on:
+      - tor
+    restart: unless-stopped
+    networks:
+      - bitcoin-network
+
+  # 3. Lightning Network
+  lnd:
+    image: lightninglabs/lnd:v0.18.0-beta # Use a stable LND version
+    container_name: lnd
+    user: "1000:1000" # Match PUID/PGID of your host or container user
+    environment:
+      # Use mainnet (Bitcoin)
+      - LND_CHAIN=bitcoin
+      - LND_NETWORK=mainnet
+      # Connect to Knots via RPC
+      - LND_BITCOIN_RPCUSER=your_rpc_username
+      - LND_BITCOIN_RPCPASS=your_rpc_password
+      - LND_BITCOIN_RPCHOST=knots:8332
+      # LND must be aware it's running behind Tor
+      - LND_TOR_PROXY=tor_proxy:9050
+      - LND_LISTEN=0.0.0.0:9735 # Expose LND P2P port internally
+    
+    ports:
+      - "127.0.0.1:8081:8081"
+      - "127.0.0.1:10009:10009"
+      
+    volumes:
+      - ./lnd-data:/root/.lnd
+    depends_on:
+      - knots
+      - tor
+      
+    restart: unless-stopped
+    networks:
+      - bitcoin-network
+      
+# Define the internal network
+networks:
+  bitcoin-network:
+    driver: bridge
