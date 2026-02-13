@@ -4,17 +4,19 @@
 This Bitcoin node implementation is **specifically optimized for Raspberry Pi** hardware. While it may work on other systems, performance and stability are best guaranteed when running on a Raspberry Pi. The pruned configuration (5GB) helps manage storage constraints typical of single-board computers. Users should monitor system resources during initial sync and consider adding swap space if running on devices with limited RAM.
 
 ## Why I built this project
-I was following the amazing Road to Knots guide and I wanted it to run on Docker
-
 This project is a Dockerized version of a Bitcoin node system from the project ![Road to Knots](https://scratch-knots.orangepill.ovh/). While I was quite amazed with this project, I wanted to make it run on Docker on my Raspberry Pi. This would help me to deploy it in seconds with **Docker compose**. 
 
 ## Features
 The compose file contains the following features :
 
 **Bitcoin Knots** : current best Bitcoin node implementation
+
 **Tor network** : your Bitcoin node is anonymously discovered using Tor network; you don't need to open any port :)
+
 **LND (Bitcoin Lightning Network)** : lightning node integrated for lightspeed transactions
+
 **Electrum Personal Server (EPS)** : bridge your own node to your wallet to secure your transactions
+
 
 ## Bitcoin node configuration
 This configuration file sets up a **pruned Bitcoin Knots node** running exclusively over **Tor**, with **RPC and ZMQ** enabled for external applications like **Lightning Network Daemon (LND)**.
@@ -94,8 +96,6 @@ This configuration file sets up a **pruned Bitcoin Knots node** running exclusiv
 
 This setup is **ideal for Lightning Network operators** who need a **private, low-storage Bitcoin node**.
 
-
-
 ## Firewall configuration
 
 The current docker-compose.yml file is designed to not modify your `iptables`. To ensure a maximal security, for an environment that only runs this project, add the following rules
@@ -111,3 +111,6 @@ sudo ufw default allow outgoing
 # 3. Enable the firewall
 sudo ufw enable
 ```
+
+## Authors
+Arnaud ENDIGNOUS
