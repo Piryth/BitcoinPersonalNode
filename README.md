@@ -3,12 +3,15 @@
 ## Why I built this project
 I was following the amazing Road to Knots guide and I wanted it to run on Docker
 
-## Features
+This project is a Dockerized version of a Bitcoin node system from the project ![Road to Knots](https://scratch-knots.orangepill.ovh/). While I was quite amazed with this project, I wanted to make it run on Docker on my Raspberry Pi. This would help me to deploy it in seconds with **Docker compose**. 
 
-Bitcoin Knots : current best Bitcoin node implementation
-Tor network : your Bitcoin node communicated anynomously on Tor
-LND (Bitcoin Lightning Network) node
-Electrum Personal Server (EPS) : your private bridge between your wallet and your node
+## Features
+The compose file contains the following features :
+
+**Bitcoin Knots** : current best Bitcoin node implementation
+**Tor network** : your Bitcoin node is anonymously discovered using Tor network; you don't need to open any port :)
+**LND (Bitcoin Lightning Network)** : lightning node integrated for lightspeed transactions
+**Electrum Personal Server (EPS)** : bridge your own node to your wallet to secure your transactions
 Lightning terminal : monitor your lightning transactions
 
 ## Firewall configuration
