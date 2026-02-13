@@ -12,7 +12,6 @@ The compose file contains the following features :
 **Tor network** : your Bitcoin node is anonymously discovered using Tor network; you don't need to open any port :)
 **LND (Bitcoin Lightning Network)** : lightning node integrated for lightspeed transactions
 **Electrum Personal Server (EPS)** : bridge your own node to your wallet to secure your transactions
-Lightning terminal : monitor your lightning transactions
 
 ## Firewall configuration
 
