@@ -1,5 +1,8 @@
 # BPN - Bitcoin Personal Node
 
+⚠️ **Raspberry Pi Disclaimer**
+This Bitcoin node implementation is **specifically optimized for Raspberry Pi** hardware. While it may work on other systems, performance and stability are best guaranteed when running on a Raspberry Pi. The pruned configuration (5GB) helps manage storage constraints typical of single-board computers. Users should monitor system resources during initial sync and consider adding swap space if running on devices with limited RAM.
+
 ## Why I built this project
 I was following the amazing Road to Knots guide and I wanted it to run on Docker
 
